@@ -14,6 +14,8 @@ builder.Services.AddSingleton<IBookRepository, FakeBookRepository>();
 
 builder.Services.AddSingleton<IAuthorRepository, FakeAuthorRepository>();
 
+builder.Services.AddSingleton<ICategoryRepository, FakeCategoryRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
