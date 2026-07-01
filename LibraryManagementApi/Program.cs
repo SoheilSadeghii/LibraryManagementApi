@@ -12,6 +12,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IBookRepository, FakeBookRepository>();
 
+builder.Services.AddSingleton<IAuthorRepository, FakeAuthorRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
