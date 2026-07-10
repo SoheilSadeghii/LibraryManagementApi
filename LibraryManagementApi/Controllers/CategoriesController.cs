@@ -1,4 +1,5 @@
-﻿using LibraryManagementApi.DTOs.Category;
+﻿using LibraryManagementApi.DTOs.Categories;
+using LibraryManagementApi.DTOs.Category;
 using LibraryManagementApi.Models;
 using LibraryManagementApi.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -20,10 +21,11 @@ namespace LibraryManagementApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] CategoryQueryParameters categoryQueryParameters)
         {
-            var categories = _categoryRepository
-                .GetAll()
+            var categories = 
+                _categoryRepository
+                .GetAll(categoryQueryParameters)
                 .Select(c => new CategoryDto
                 {
                     Id = c.Id,

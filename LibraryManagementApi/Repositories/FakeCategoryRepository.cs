@@ -1,4 +1,8 @@
-﻿using LibraryManagementApi.Models;
+﻿using LibraryManagementApi.DTOs.Books;
+using LibraryManagementApi.DTOs.Categories;
+using LibraryManagementApi.Models;
+using System.Reflection;
+using LibraryManagementApi.Extensions;
 
 namespace LibraryManagementApi.Repositories
 {
@@ -30,9 +34,36 @@ namespace LibraryManagementApi.Repositories
 
             #endregion
         }
-        public IEnumerable<Category> GetAll()
+        public IEnumerable<Category> GetAll(CategoryQueryParameters categoryQueryParameters)
         {
-            return _categories.OrderBy(c => c.Id).ToList();
+            var categories = _categories.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(categoryQueryParameters.Search))
+            {
+                var searchTerm =
+                    categoryQueryParameters.Search.Trim();
+
+                categories = categories
+                    .Where(c => c.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrWhiteSpace(categoryQueryParameters.SortBy))
+            {
+                var bookQueryable = categories.AsQueryable();
+
+                if (typeof(Category).GetProperty(categoryQueryParameters.SortBy,
+                    BindingFlags.Public |
+                    BindingFlags.Instance |
+                    BindingFlags.IgnoreCase) != null)
+                {
+                    categories = bookQueryable.orderByCustom(
+                        categoryQueryParameters.SortBy,
+                        categoryQueryParameters.SortOrder
+                        );
+                }
+            }
+
+            return categories;
         }
 
         public Category? GetById(int id)
