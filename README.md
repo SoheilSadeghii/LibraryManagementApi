@@ -75,6 +75,7 @@ Only Admin users can create, update, or delete resources.
 - GET /api/books/{id}
 - POST /api/books
 - PUT /api/books/{id}
+- PATCH /api/books/{id}
 - DELETE /api/books/{id}
 
 ### Authors
@@ -82,6 +83,7 @@ Only Admin users can create, update, or delete resources.
 - GET /api/authors
 - POST /api/authors
 - PUT /api/authors/{id}
+- PATCH /api/books/{id}
 - DELETE /api/authors/{id}
 
 ### Categories
@@ -89,6 +91,7 @@ Only Admin users can create, update, or delete resources.
 - GET /api/categories
 - POST /api/categories
 - PUT /api/categories/{id}
+- PATCH /api/books/{id}
 - DELETE /api/categories/{id}
 
 ---
