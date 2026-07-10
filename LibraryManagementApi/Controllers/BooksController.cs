@@ -1,4 +1,5 @@
 ﻿using LibraryManagementApi.DTOs.Book;
+using LibraryManagementApi.DTOs.Books;
 using LibraryManagementApi.Models;
 using LibraryManagementApi.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -19,11 +20,11 @@ namespace LibraryManagementApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAll([FromQuery] BookQueryParameters bookQueryParameters)
         {
             var books =
                 _bookRepository
-                .GetAll()
+                .GetAll(bookQueryParameters)
                 .Select(b => new BookDto
                 {
                     Id = b.Id,
