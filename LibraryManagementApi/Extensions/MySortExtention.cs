@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 
 namespace LibraryManagementApi.Extensions
 {
@@ -9,7 +10,11 @@ namespace LibraryManagementApi.Extensions
         {
             var type = typeof(TEntity);
             var expression2 = Expression.Parameter(type, "t");
-            var property = type.GetProperty(sortBy);
+            var property = type.GetProperty(
+                sortBy,
+                BindingFlags.Public |
+                BindingFlags.Instance |
+                BindingFlags.IgnoreCase);
             var expression1 = Expression.
                 MakeMemberAccess(expression2, property);
             var Lambda = Expression.Lambda(expression1, expression2);
