@@ -1,4 +1,7 @@
-﻿using LibraryManagementApi.Models;
+﻿using LibraryManagementApi.DTOs.Books;
+using LibraryManagementApi.Extensions;
+using LibraryManagementApi.Models;
+using System.Reflection;
 
 namespace LibraryManagementApi.Repositories
 {
@@ -106,9 +109,65 @@ namespace LibraryManagementApi.Repositories
             #endregion
         }
 
-        public IEnumerable<Book> GetAll()
+        public IEnumerable<Book> GetAll(BookQueryParameters bookQueryParameters)
         {
-            return _books.OrderBy(b => b.Id).ToList();
+            var books = _books.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(bookQueryParameters.Search))
+            {
+                var searchTerm =
+                    bookQueryParameters.Search.Trim();
+
+                books = books
+                    .Where(p => p.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                    p.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (bookQueryParameters.AuthorId != null)
+            {
+                books = books
+                    .Where(b => b.AuthorId == bookQueryParameters.AuthorId);
+            }
+
+            if (bookQueryParameters.CategoryId != null)
+            {
+                books = books
+                    .Where(b => b.CategoryId == bookQueryParameters.CategoryId);
+            }
+
+            if (bookQueryParameters.MinPrice != null)
+            {
+                books = books
+                    .Where(b => b.Price >= bookQueryParameters.MinPrice);
+            }
+
+            if (bookQueryParameters.MaxPrice != null)
+            {
+                books = books
+                    .Where(b => b.Price <= bookQueryParameters.MaxPrice);
+            }
+
+            if (!string.IsNullOrWhiteSpace(bookQueryParameters.SortBy))
+            {
+                var bookQueryable = books.AsQueryable();
+
+                if (typeof(Book).GetProperty(bookQueryParameters.SortBy,
+                    BindingFlags.Public |
+                    BindingFlags.Instance |
+                    BindingFlags.IgnoreCase) != null)
+                {
+                    books = bookQueryable.orderByCustom(
+                        bookQueryParameters.SortBy,
+                        bookQueryParameters.SortOrder
+                        );
+                }
+            }
+
+            books = books
+                .Skip(bookQueryParameters.PageSize * (bookQueryParameters.PageNumber - 1))
+                .Take(bookQueryParameters.PageSize);
+
+            return books;
         }
 
         public Book? GetById(int id)

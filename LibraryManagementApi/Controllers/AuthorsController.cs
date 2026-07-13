@@ -1,4 +1,5 @@
 ﻿using LibraryManagementApi.DTOs.Author;
+using LibraryManagementApi.DTOs.Authors;
 using LibraryManagementApi.DTOs.Book;
 using LibraryManagementApi.Models;
 using LibraryManagementApi.Repositories;
@@ -20,10 +21,11 @@ namespace LibraryManagementApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get([FromQuery] AuthorQueryParameters authorQueryParameters)
         {
-            var authors = _authorRepository
-                .GetAll()
+            var authors = 
+                _authorRepository
+                .GetAll(authorQueryParameters)
                 .Select(b => new AuthorDto
                 {
                     Id = b.Id,

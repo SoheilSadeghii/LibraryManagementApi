@@ -1,4 +1,8 @@
-﻿using LibraryManagementApi.Models;
+﻿using LibraryManagementApi.DTOs.Authors;
+using LibraryManagementApi.DTOs.Books;
+using LibraryManagementApi.Models;
+using System.Reflection;
+using LibraryManagementApi.Extensions;
 
 namespace LibraryManagementApi.Repositories
 {
@@ -35,9 +39,35 @@ namespace LibraryManagementApi.Repositories
 
             #endregion
         }
-        public IEnumerable<Author> GetAll()
+        public IEnumerable<Author> GetAll(AuthorQueryParameters authorQueryParameters)
         {
-            return _authors.OrderBy(a => a.Id).ToList();
+            var authors = _authors.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(authorQueryParameters.Search))
+            {
+                var searchTerm =
+                    authorQueryParameters.Search.Trim();
+
+                authors = authors
+                    .Where(a => a.Fullname.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrWhiteSpace(authorQueryParameters.SortBy))
+            {
+                var authorsQueryable = authors.AsQueryable();
+
+                if (typeof(Author).GetProperty(authorQueryParameters.SortBy,
+                    BindingFlags.Public |
+                    BindingFlags.Instance |
+                    BindingFlags.IgnoreCase) != null)
+                {
+                    authors = authorsQueryable.orderByCustom(
+                        authorQueryParameters.SortBy,
+                        authorQueryParameters.SortOrder
+                        );
+                }
+            }
+            return authors;
         }
 
         public Author? GetById(int id)
