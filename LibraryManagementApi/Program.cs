@@ -1,4 +1,6 @@
 using LibraryManagementApi.Repositories;
+using LibraryManagementApi.Services;
+using LibraryManagementApi.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,7 @@ builder.Services.AddSingleton<IBookRepository, FakeBookRepository>();
 builder.Services.AddSingleton<IAuthorRepository, FakeAuthorRepository>();
 builder.Services.AddSingleton<ICategoryRepository, FakeCategoryRepository>();
 builder.Services.AddSingleton<IUserRepository, FakeUserRepository>();
+builder.Services.AddScoped<IJwtService, JwtService>();
 
 var app = builder.Build();
 
