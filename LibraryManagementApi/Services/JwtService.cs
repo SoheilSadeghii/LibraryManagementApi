@@ -37,7 +37,7 @@ namespace LibraryManagementApi.Services
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:audience"],
+                audience: _configuration["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(
                     Convert.ToDouble(_configuration["Jwt:ExpireMinutes"])),
