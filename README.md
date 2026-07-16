@@ -33,22 +33,6 @@ A RESTful Web API built with ASP.NET Core as a practice project to strengthen ba
 
 ---
 
-## 📁 Project Structure
-
-```
-Controllers/
-DTOs/
-Extensions/
-Helpers/
-Middleware/
-Models/
-Repositories/
-Services/
-Validators/
-```
-
----
-
 ## 🔑 Authentication
 
 The API uses JWT Bearer Authentication.
