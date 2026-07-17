@@ -55,5 +55,32 @@ namespace LibraryManagementApi.Controllers
                 new { id = user.Id },
                 null);
         }
+
+        [HttpPost("login")]
+        public IActionResult Login(LoginRequestDto loginRequestDto)
+        {
+            var user =
+                _userRepository.GetByUsername(loginRequestDto.Username);
+
+            if (user == null) return Unauthorized("Invalid username or password");
+
+            var passwordHasher = new PasswordHasher<User>();
+
+            var result =
+                passwordHasher.VerifyHashedPassword(
+                    user,
+                    user.PasswordHash,
+                    loginRequestDto.Password);
+
+            if (result == PasswordVerificationResult.Failed) return Unauthorized("Invalid username or password.");
+
+            var token =
+                _jwtService.GenerateToken(user);
+
+            return Ok(new LoginResponseDto
+            {
+                Token = token
+            });
+        }
     }
 }
