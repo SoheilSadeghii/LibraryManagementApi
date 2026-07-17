@@ -14,13 +14,15 @@ namespace LibraryManagementApi.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IJwtService _jwtService;
+        private readonly IPasswordHasher<User> _passwordHasher;
 
-        public AuthController(IUserRepository userRepository, IJwtService jwtService)
+        public AuthController(IUserRepository userRepository, IJwtService jwtService, IPasswordHasher<User> passwordHasher)
         {
             _userRepository = userRepository;
             _jwtService = jwtService;
+            _passwordHasher = passwordHasher;
         }
-
+        
         [HttpPost("register")]
         public IActionResult Register(RegisterRequestDto registerRequestDto)
         {
@@ -41,10 +43,8 @@ namespace LibraryManagementApi.Controllers
                 Role = "User"
             };
 
-            var passwordHasher = new PasswordHasher<User>();
-
             user.PasswordHash =
-                passwordHasher.HashPassword(
+                _passwordHasher.HashPassword(
                     user,
                     registerRequestDto.Password);
 
@@ -64,10 +64,8 @@ namespace LibraryManagementApi.Controllers
 
             if (user == null) return Unauthorized("Invalid username or password");
 
-            var passwordHasher = new PasswordHasher<User>();
-
             var result =
-                passwordHasher.VerifyHashedPassword(
+                _passwordHasher.VerifyHashedPassword(
                     user,
                     user.PasswordHash,
                     loginRequestDto.Password);

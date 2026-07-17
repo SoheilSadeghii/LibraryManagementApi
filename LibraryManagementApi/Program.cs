@@ -1,6 +1,8 @@
+using LibraryManagementApi.Models;
 using LibraryManagementApi.Repositories;
 using LibraryManagementApi.Services;
 using LibraryManagementApi.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddSingleton<IAuthorRepository, FakeAuthorRepository>();
 builder.Services.AddSingleton<ICategoryRepository, FakeCategoryRepository>();
 builder.Services.AddSingleton<IUserRepository, FakeUserRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 var app = builder.Build();
 
