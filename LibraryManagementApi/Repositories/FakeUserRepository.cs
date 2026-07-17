@@ -1,4 +1,5 @@
 ﻿using LibraryManagementApi.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace LibraryManagementApi.Repositories
 {
@@ -7,25 +8,35 @@ namespace LibraryManagementApi.Repositories
         private readonly List<User> _users;
         public FakeUserRepository()
         {
-            _users =
-            [
-                new User()
-                {
-                    Id = 1,
-                    Username = "Admin",
-                    PasswordHash = "admin123",
-                    Email = "admin@gmail.com",
-                    Role = "Admin"
-                },
-                new User()
-                {
-                    Id = 2,
-                    Username = "soheil",
-                    PasswordHash = "user123",
-                    Email = "user@gmail.com",
-                    Role = "User"
-                }
-            ];
+            _users = new List<User>();
+
+            var hasher = new PasswordHasher<User>();
+
+            var admin = new User
+            {
+                Id = 1,
+                Username = "Admin",
+                Email = "admin@gmail.com",
+                Role = "Admin"
+            };
+
+            admin.PasswordHash =
+                hasher.HashPassword(admin, "admin123");
+
+            _users.Add(admin);
+
+            var user = new User
+            {
+                Id = 2,
+                Username = "soheil",
+                Email = "user@gmail.com",
+                Role = "User"
+            };
+
+            user.PasswordHash =
+                hasher.HashPassword(user, "user123");
+
+            _users.Add(user);
         }
         public IEnumerable<User> GetAll()
             => _users.OrderBy(x => x.Id);
