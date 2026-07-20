@@ -2,6 +2,7 @@
 using LibraryManagementApi.DTOs.Category;
 using LibraryManagementApi.Models;
 using LibraryManagementApi.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace LibraryManagementApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryRepository _categoryRepository;
@@ -113,6 +115,7 @@ namespace LibraryManagementApi.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var category = _categoryRepository

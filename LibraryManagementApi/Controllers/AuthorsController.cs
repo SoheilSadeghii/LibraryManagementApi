@@ -3,6 +3,7 @@ using LibraryManagementApi.DTOs.Authors;
 using LibraryManagementApi.DTOs.Book;
 using LibraryManagementApi.Models;
 using LibraryManagementApi.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace LibraryManagementApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthorsController : ControllerBase
     {
         private readonly IAuthorRepository _authorRepository;
@@ -114,6 +116,7 @@ namespace LibraryManagementApi.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var author = _authorRepository

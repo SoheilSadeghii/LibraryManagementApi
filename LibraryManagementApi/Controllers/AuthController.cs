@@ -25,6 +25,7 @@ namespace LibraryManagementApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult GetAll()
         {
             var users =
