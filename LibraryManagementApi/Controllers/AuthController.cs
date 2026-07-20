@@ -26,15 +26,11 @@ namespace LibraryManagementApi.Controllers
         [HttpPost("register")]
         public IActionResult Register(RegisterRequestDto registerRequestDto)
         {
-            var usernamerExists =
-                _userRepository.GetByUsername(registerRequestDto.Username);
+            if (_userRepository.GetByUsername(registerRequestDto.Username) != null) 
+                return BadRequest("Username already exists.");
 
-            if (usernamerExists != null) return BadRequest("Username already exists.");
-
-            var emailExists =
-                _userRepository.GetByEmail(registerRequestDto.Email);
-
-            if (emailExists != null) return BadRequest("Email already exists.");
+            if (_userRepository.GetByEmail(registerRequestDto.Email) != null)
+                return BadRequest("Email already exists.");
 
             var user = new User
             {
@@ -44,9 +40,7 @@ namespace LibraryManagementApi.Controllers
             };
 
             user.PasswordHash =
-                _passwordHasher.HashPassword(
-                    user,
-                    registerRequestDto.Password);
+                _passwordHasher.HashPassword(user, registerRequestDto.Password);
 
             _userRepository.Create(user);
 
@@ -72,8 +66,7 @@ namespace LibraryManagementApi.Controllers
 
             if (result == PasswordVerificationResult.Failed) return Unauthorized("Invalid username or password.");
 
-            var token =
-                _jwtService.GenerateToken(user);
+            var token = _jwtService.GenerateToken(user);
 
             return Ok(new LoginResponseDto
             {
