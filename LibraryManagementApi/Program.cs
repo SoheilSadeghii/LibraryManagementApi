@@ -20,7 +20,7 @@ builder.Services.AddSingleton<IAuthorRepository, FakeAuthorRepository>();
 builder.Services.AddSingleton<ICategoryRepository, FakeCategoryRepository>();
 builder.Services.AddSingleton<IUserRepository, FakeUserRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
 
 var app = builder.Build();
 
