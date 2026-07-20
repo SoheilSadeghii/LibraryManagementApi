@@ -2,6 +2,7 @@
 using LibraryManagementApi.DTOs.Books;
 using LibraryManagementApi.Models;
 using LibraryManagementApi.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace LibraryManagementApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class BooksController : ControllerBase
     {
         private readonly IBookRepository _bookRepository;
@@ -139,6 +141,7 @@ namespace LibraryManagementApi.Controllers
 
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteBook(int id)
         {
             var targetBook = _bookRepository.GetById(id);
