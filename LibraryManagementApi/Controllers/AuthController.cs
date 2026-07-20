@@ -2,6 +2,7 @@
 using LibraryManagementApi.Models;
 using LibraryManagementApi.Repositories;
 using LibraryManagementApi.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ namespace LibraryManagementApi.Controllers
             _passwordHasher = passwordHasher;
         }
         
+        [AllowAnonymous]
         [HttpPost("register")]
         public IActionResult Register(RegisterRequestDto registerRequestDto)
         {
@@ -50,6 +52,7 @@ namespace LibraryManagementApi.Controllers
                 null);
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public IActionResult Login(LoginRequestDto loginRequestDto)
         {
