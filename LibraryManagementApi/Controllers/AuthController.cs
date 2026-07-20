@@ -23,6 +23,15 @@ namespace LibraryManagementApi.Controllers
             _jwtService = jwtService;
             _passwordHasher = passwordHasher;
         }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var users =
+                _userRepository.GetAll();
+
+            return Ok(users);
+        }
         
         [AllowAnonymous]
         [HttpPost("register")]
